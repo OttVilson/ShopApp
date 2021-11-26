@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+    <input type="text" placeholder="Title" formControlName="title">
+    <input type="number" placeholder="Price" formControlName="price">
+    <input type="text" placeholder="Category" formControlName="category">
+    <input type="text" placeholder="imageURL" formControlName="imageURL">
+    <p>{{ form.value | json }}</p>
+    <button (click)="onClick()">Click</button>
+    <button (click)="setNull()">Null</button>
+    <button (click)="onClickForm()">Click for whole</button>
+</form>

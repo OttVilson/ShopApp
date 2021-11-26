@@ -1,0 +1,22 @@
+.login-page {
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+    padding: 15px;
+}
+
+.github {
+    height: 24px;
+}
+
+.text {
+    font-family: Roboto;
+}
+
+button {
+    color: lightslategray;
+}
+
+button:hover {
+    color: black;
+}

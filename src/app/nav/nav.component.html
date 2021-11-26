@@ -1,0 +1,35 @@
+<mat-toolbar>
+    <ng-container *ngIf="user$ | async as user">
+        <ng-container *ngFor="let menuItem of menuItems$ | async">
+            <button 
+                *ngIf="menuItem.shortcut"
+                [routerLink]="menuItem.link"
+                mat-icon-button 
+                [shortcut-nav]="menuTrigger">
+                    <mat-icon>{{ menuItem.icon }}</mat-icon>
+            </button>
+        </ng-container>
+        <span class="spacer"></span>
+        <button
+            mat-raised-button 
+            [matMenuTriggerFor]="menu" 
+            #menuTrigger="matMenuTrigger">
+            <img *ngIf="user.photoURL" [src]="user.photoURL" />
+            <mat-icon *ngIf="user.icon">{{ user.icon }}</mat-icon>
+            <span>{{ user.name }}</span>
+            <mat-icon>{{ icon(menuTrigger) }}</mat-icon>
+        </button>
+    </ng-container>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu" xPosition="before">
+    <a 
+        mat-menu-item
+        *ngFor="let menuItem of menuItems$ | async"
+        routerLinkActive="activated"
+        [routerLinkActiveOptions]="{ exact: true}"
+        [routerLink]="menuItem.link">
+            <mat-icon *ngIf="menuItem.icon">{{ menuItem.icon }}</mat-icon>
+            <span>{{ menuItem.text }}</span>
+    </a>
+</mat-menu>

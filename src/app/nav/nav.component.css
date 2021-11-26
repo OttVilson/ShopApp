@@ -1,0 +1,22 @@
+.spacer {
+    flex: 1 1 auto;
+}
+
+button, a, a > mat-icon {
+    color: lightslategray;
+}
+
+button:hover, a:hover, a:hover > mat-icon {
+    color: black;
+}
+
+.activated {
+    background-color: lightgray;
+}
+
+img {
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    padding: 5px;
+}

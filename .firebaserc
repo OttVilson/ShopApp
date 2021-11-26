@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "shopapp-a724a": {
+      "hosting": {
+        "shop-app": [
+          "shopapp-a724a"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "shopapp-a724a"
+  }
+}

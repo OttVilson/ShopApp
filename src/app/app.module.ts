@@ -2,15 +2,70 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { AppRoutingModule } from './routing/app-routing.module';
+import { NavComponent } from './nav/nav.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ShortcutNavDirective } from './directives/shortcut-nav.directive';
+import { MenuService } from './services/menu.service';
+
+import { environment } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
+import { ProductsComponent } from './products/products.component';
+import { OrdersComponent } from './orders/orders.component';
+import { StoreComponent } from './store/store.component';
+import { AuthService } from './services/auth.service';
+import { DatabaseService } from './services/database.service';
+import { ProductEditComponent } from './product-edit/product-edit.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SpinnerService } from './services/spinner.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ShoppingCartComponent,
+    MyOrdersComponent,
+    NavComponent,
+    ShortcutNavDirective,
+    LoginComponent,
+    LogoutComponent,
+    ProductsComponent,
+    OrdersComponent,
+    StoreComponent,
+    ProductEditComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
+    AppRoutingModule,
+    MatToolbarModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [
+    MenuService,
+    AuthService,
+    DatabaseService,
+    SpinnerService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
