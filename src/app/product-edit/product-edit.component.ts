@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { filter, map, pairwise, startWith, switchMap, tap } from 'rxjs/operators';
+import { jsonPathsOfForm, NodeType, Path } from '../helpers/form.helpers';
 import { Product } from '../model/model';
 import { DatabaseService } from '../services/database.service';
 import { SpinnerService } from '../services/spinner.service';
@@ -21,7 +22,7 @@ export class ProductEditComponent implements OnInit {
     private dbService: DatabaseService,
     private router: Router,
     private spinner: SpinnerService,
-    fb: FormBuilder
+    private fb: FormBuilder
   ) { this.form = this.initializeForm(fb); }
 
   ngOnInit() {
