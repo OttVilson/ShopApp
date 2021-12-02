@@ -26,8 +26,7 @@ export class DatabaseService {
   getProduct(id: string): Observable<Product | undefined> {
     return this.products$.pipe(
       map(products => products.find(product => product.id === id)),
-      distinctUntilChanged(areProductsEqual),
-      delay(3000)
+      distinctUntilChanged(areProductsEqual)
     );
   }
   

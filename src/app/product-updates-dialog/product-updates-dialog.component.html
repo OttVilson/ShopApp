@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Product has been updated in the database</h1>
+<mat-dialog-content class="mat-typography" [formGroup]="form">
+    <mat-checkbox *ngFor="let diff of diff$ | async" [formControlName]="diff.path[0]">
+        {{ diff.path[0] }} has changed from {{ diff.formValue }} to {{ diff.objectValue }}
+    </mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button (click)="onClick()">Log form value</button>
+    <button mat-raised-button [mat-dialog-close]="chosenDiffs()" cdkFocusInitial>Merge</button>
+</mat-dialog-actions>
+
