@@ -1,0 +1,14 @@
+ul {
+    list-style: none;
+    margin: 5px;
+    padding: 5px 10px;
+}
+
+:host::ng-deep.mat-checkbox-layout{
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+    
+:host::ng-deep.mat-checkbox-inner-container{
+    margin-top: 4px;
+}

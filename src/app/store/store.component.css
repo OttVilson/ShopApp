@@ -1,0 +1,8 @@
+.product-card {
+    width: 250px;
+    display: inline-block;
+}
+
+.product-card:hover {
+    transform: translateY(3px);
+}

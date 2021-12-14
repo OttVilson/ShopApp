@@ -4,8 +4,8 @@ import { getToken } from "@firebase/app-check";
 import { getScalarValuesOfForm, getScalarValueFromObject, 
     pathsOfForm, NodeType, Path, ScalarFormValue, leftDiffBetweenFormAndObject, FormObjectDiff } from "./form.helpers";
 
-fdescribe('Form helpers: extract JSON structure - pathsOfForm', () => {
-
+describe('Form helpers', () => {
+describe('pathsOfForm', () => {
     let form: FormGroup;
     let fb: FormBuilder;
     let paths: Path[];
@@ -198,7 +198,7 @@ fdescribe('Form helpers: extract JSON structure - pathsOfForm', () => {
     })
 });
 
-fdescribe('Form helpers: getScalarValuesOfForm', () => {
+describe('getScalarValuesOfForm', () => {
 
     let form: FormGroup;
     let fb: FormBuilder;
@@ -287,7 +287,7 @@ fdescribe('Form helpers: getScalarValuesOfForm', () => {
     })
 });
 
-fdescribe('Form helpers: getScalarValueFromObject', () => {
+describe('getScalarValueFromObject', () => {
     let object: { [key: string]: any };
 
     it('should find value from nested object, array, and scalar', () => {
@@ -388,7 +388,7 @@ fdescribe('Form helpers: getScalarValueFromObject', () => {
     });
 });
 
-fdescribe('Form helpers: leftDiffBetweenFormAndObject', () => {
+describe('leftDiffBetweenFormAndObject', () => {
     let form: FormGroup;
     let fb: FormBuilder;
     let object: { [key: string]: any };
@@ -621,5 +621,6 @@ fdescribe('Form helpers: leftDiffBetweenFormAndObject', () => {
         expectedDiff = [];
 
         expect(diff).toEqual(expectedDiff);
-    })
+    });
+});
 });

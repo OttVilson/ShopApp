@@ -1,11 +1,31 @@
-<h1 mat-dialog-title>Product has been updated in the database</h1>
+<h3 mat-dialog-title class="mat-typography">
+    Product has been updated in the database<span *ngIf="counter > 1"> ({{ counter }} times)</span>,
+    and the differences from the current form values can be merged to the underlying form.
+</h3>
 <mat-dialog-content class="mat-typography" [formGroup]="form">
-    <mat-checkbox *ngFor="let diff of diff$ | async" [formControlName]="diff.path[0]">
-        {{ diff.path[0] }} has changed from {{ diff.formValue }} to {{ diff.objectValue }}
+    <mat-checkbox
+        *ngIf="state$ | async as state"
+        [checked]="state.all"
+        [indeterminate]="state.some" 
+        (change)="setAllValues($event.checked)">
+            Choose all differences to be merged
     </mat-checkbox>
+    <ul>
+        <li *ngFor="let diff of diffs$ | async">
+            <mat-checkbox [formControlName]="diff.path[0]">
+                {{ diff.path[0] }}<!---->
+                <mat-icon 
+                    *ngIf="diff.pristine" 
+                    inline="true"
+                    [matTooltip]="tooltip(diff)"
+                    matTooltipPosition="above">
+                        diamond
+                </mat-icon>:
+                '{{ diff.formValue}}' <mat-icon inline="true">arrow_forward</mat-icon> '{{ diff.objectValue }}'
+            </mat-checkbox>
+        </li>
+    </ul>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button (click)="onClick()">Log form value</button>
-    <button mat-raised-button [mat-dialog-close]="chosenDiffs()" cdkFocusInitial>Merge</button>
+    <button mat-raised-button [mat-dialog-close]="chosenDiffs()" cdkFocusInitial>{{ buttonMessage$ | async }}</button>
 </mat-dialog-actions>
-

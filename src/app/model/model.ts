@@ -4,6 +4,7 @@ export interface Product {
     price: number,
     category: string,
     imageURL: string,
+    imageCredit?: string,
     id: string
 }
 
@@ -15,6 +16,7 @@ export const areProductsEqual = (first: Product | undefined, second: Product | u
          first.price    === second.price &&
          first.category === second.category &&
          first.imageURL === second.imageURL &&
+         first.imageCredit === second.imageCredit &&
          first.id       === second.id;
 }
 

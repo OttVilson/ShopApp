@@ -25,5 +25,4 @@ export class AntiAuthGuard implements CanActivate {
         map(user => !areUsersEqual(user, ANONYMOUS) ? this.router.parseUrl('') : true)
       );
   }
-  
 }

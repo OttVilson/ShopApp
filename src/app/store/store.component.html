@@ -1,1 +1,6 @@
-<p>store works!</p>
+<product-card 
+    *ngFor="let product of products$ | async" 
+    [product]="product"
+    class="product-card">
+    Buy now!
+</product-card>
