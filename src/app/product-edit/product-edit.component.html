@@ -1,10 +1,32 @@
-<form [formGroup]="form">
-    <input type="text" placeholder="Title" formControlName="title">
-    <input type="number" placeholder="Price" formControlName="price">
-    <input type="text" placeholder="Category" formControlName="category">
-    <input type="text" placeholder="imageURL" formControlName="imageURL">
-    <p>{{ form.value | json }}</p>
-    <button (click)="onClick()">Click</button>
-    <button (click)="setNull()">Null</button>
-    <button (click)="onClickForm()">Click for whole</button>
-</form>
+<div class="wrapper">
+    <form [formGroup]="form">
+        <mat-form-field appearance="fill">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+            <mat-error>Title is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price">
+            <mat-error>Price is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category">
+            <mat-error>Category is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Image URL</mat-label>
+            <input matInput formControlName="imageURL">
+            <mat-error>Image URL is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Credit for image</mat-label>
+            <input matInput formControlName="imageCredit">
+        </mat-form-field>
+    </form>
+    <product-card [product]="form.value" class="product-card">
+        <button mat-raised-button (click)="onSave(form.value)" [disabled]="form.invalid">Save</button>
+        <button mat-raised-button (click)="onCancel()">Cancel</button>
+    </product-card>
+</div>

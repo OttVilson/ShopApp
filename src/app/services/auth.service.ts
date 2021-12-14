@@ -20,7 +20,10 @@ export const ANONYMOUS: AppUser = {
 export class AuthService {
   private _user$: ReplaySubject<AppUser> = new ReplaySubject<AppUser>(1);
 
-  constructor(private afAuth: AngularFireAuth, spinner: SpinnerService) {
+  constructor(
+    private afAuth: AngularFireAuth, 
+    spinner: SpinnerService
+  ) {
     this.initializeUser();
     spinner.serviceInitializationSpinner(this._user$);
   }
@@ -54,6 +57,10 @@ export class AuthService {
     }
         
     this.afAuth.signInWithRedirect(provider);
+  }
+
+  logout(): void {
+    this.afAuth.signOut();
   }
 
   getRedirectResult(): Promise<void> {

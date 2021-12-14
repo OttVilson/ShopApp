@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
+import { Product } from '../model/model';
+import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-products',
@@ -9,21 +13,25 @@ import { Router } from '@angular/router';
 })
 export class ProductsComponent {
 
-  constructor(private db: AngularFirestore, private router: Router) { }
+  products$: Observable<Product[]>;
+  displayedColumns: string[] = ['title', 'price', 'actions'];
 
-  onClick() {
-    this.router.navigate(['admin', 'products', 'edit'], { queryParams: { id: 'UroqnkWOMfT80Cqioc0V' }});
-    // this.db.collection('products').add({
-    //   item: 'item',
-    //   dela: 'asda'
-    // });
+  constructor(
+    private dbService: DatabaseService, 
+    private router: Router
+  ) {
+    this.products$ = dbService.products$;
   }
 
-  onButton() {
-    let items = this.db.collection('products').valueChanges();
-    items.subscribe(
-      res => console.log(res)
-    )
+  onEdit(product: Product) {
+    this.router.navigate(['admin', 'products', 'edit'], { queryParams: { id: product.id }});
   }
 
+  onDelete(product: Product) {
+    this.dbService.delete(product);
+  }
+
+  onAdd() {
+    this.router.navigate(['admin', 'products', 'edit']);
+  }
 }

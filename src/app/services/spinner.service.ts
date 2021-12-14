@@ -8,7 +8,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable } from '@angular/core';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { combineLatest, from, merge, Observable, of, ReplaySubject, Subject, timer, UnaryFunction } from 'rxjs';
-import { catchError, delay, distinct, distinctUntilChanged, filter, first, map, mapTo, mergeMap, pairwise, scan, startWith, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { catchError, delay, delayWhen, distinct, distinctUntilChanged, filter, first, map, mapTo, mergeMap, pairwise, scan, startWith, switchMap, takeWhile, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class SpinnerService {
     { isSpinning: true,  proposeStop: true, delay: this.lag + this.antiFlickeringBuffer }
   ];
   private delayStartAndPreventFlickering$ = from(this.spinnerTimeline).pipe(
-    mergeMap(item => of(item).pipe(delay(item.delay)))
+    delayWhen(conf => timer(conf.delay))
   );
 
   constructor(private overlay: Overlay) {
@@ -47,7 +47,9 @@ export class SpinnerService {
         return of(false);
       }),
       map(res => res ? +1 : -1),
+      tap(res => console.log('spinner res:', res)),
       scan((acc, value) => acc + value >= 0 ? acc + value : 0, 0),
+      tap(scan => console.log('spinner scan', scan))
     )
     .subscribe({
       next: res => this.regulateSpinner(res, this.overlayRef),

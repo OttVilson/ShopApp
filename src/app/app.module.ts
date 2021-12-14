@@ -30,6 +30,18 @@ import { DatabaseService } from './services/database.service';
 import { ProductEditComponent } from './product-edit/product-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SpinnerService } from './services/spinner.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ProductUpdatesDialogComponent } from './product-updates-dialog/product-updates-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { ProductCardComponent } from './product-card/product-card.component';
+import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -43,7 +55,9 @@ import { SpinnerService } from './services/spinner.service';
     ProductsComponent,
     OrdersComponent,
     StoreComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    ProductUpdatesDialogComponent,
+    ProductCardComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +72,17 @@ import { SpinnerService } from './services/spinner.service';
     AngularFirestoreModule,
     FormsModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatGridListModule,
+    MatListModule,
+    MatTableModule
   ],
   providers: [
     MenuService,

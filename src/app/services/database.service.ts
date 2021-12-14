@@ -26,8 +26,7 @@ export class DatabaseService {
   getProduct(id: string): Observable<Product | undefined> {
     return this.products$.pipe(
       map(products => products.find(product => product.id === id)),
-      distinctUntilChanged(areProductsEqual),
-      delay(3000)
+      distinctUntilChanged(areProductsEqual)
     );
   }
   
@@ -36,12 +35,11 @@ export class DatabaseService {
     return this.store.collection<ProductData>(this.PRODUCTS).add(productData).then(res => res.id);
   }
 
-  update(product: Partial<Product> & { id: string }): void {
+  update(product: Partial<Product> & { id: string }): Promise<void> {
     let {id, ...productData} = {...product};
     this.checkId(id);
 
-    this.store.collection<ProductData>(this.PRODUCTS).doc(id).update(productData)
-      .catch(err => console.log(err));
+    return this.store.collection<ProductData>(this.PRODUCTS).doc(id).update(productData);
   }
 
   delete(product: Product): void {

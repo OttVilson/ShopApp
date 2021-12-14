@@ -1,0 +1,14 @@
+<mat-card>
+    <div *ngIf="product.imageCredit" [innerHTML]="product.imageCredit"></div> 
+    <img mat-card-xl-image [src]="product.imageURL" alt="image not set or unavailable">
+    <mat-card-title>
+        {{ product.title }}
+    </mat-card-title>
+    <mat-card-content>
+        <span>{{ product.price | currency }}</span>
+        <span class="right">{{ product.category }}</span>
+    </mat-card-content>
+    <mat-card-actions>
+        <ng-content></ng-content>
+    </mat-card-actions>
+</mat-card>
