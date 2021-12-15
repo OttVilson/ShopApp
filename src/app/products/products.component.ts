@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { Product } from '../model/model';
 import { DatabaseService } from '../services/database.service';
 
@@ -11,7 +11,7 @@ import { DatabaseService } from '../services/database.service';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent {
+export class ProductsComponent implements AfterViewInit {
 
   products$: Observable<Product[]>;
   displayedColumns: string[] = ['title', 'price', 'actions'];
@@ -21,6 +21,22 @@ export class ProductsComponent {
     private router: Router
   ) {
     this.products$ = dbService.products$;
+  }
+
+  @ViewChild('matSort') sort!: MatSort;
+
+  ngAfterViewInit() {
+    setTimeout(
+      () => console.log(this.sort),
+      5000
+    )
+    // this.sort.sortChange.asObservable().subscribe(
+    //   res => console.log('sort', res)
+    // )
+  }
+
+  announceSortChange(sortState: Sort) {
+    console.log(sortState);
   }
 
   onEdit(product: Product) {

@@ -42,6 +42,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { MatTableModule } from '@angular/material/table';
     MatCardModule,
     MatGridListModule,
     MatListModule,
-    MatTableModule
+    MatTableModule,
+    MatSortModule
   ],
   providers: [
     MenuService,
