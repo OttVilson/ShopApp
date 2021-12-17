@@ -1,5 +1,9 @@
 <button mat-raised-button (click)="onAdd()">Add new product</button>
-<table mat-table [dataSource]="products$" matSort (matSortChange)="announceSortChange($event)">
+<mat-form-field appearance="fill">
+  <mat-label>Search</mat-label>
+  <input id="filter" matInput>
+</mat-form-field>
+<table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
       <td mat-cell *matCellDef="let product"> {{ product.title }} </td>

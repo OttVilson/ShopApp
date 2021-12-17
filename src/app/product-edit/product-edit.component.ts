@@ -101,7 +101,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   private openDialogAndReturnItsResult(diffArray: FormObjectDiff[]): Observable<FormObjectDiff[]> {
-    const dialogRef: MatDialogRef<ProductUpdatesDialogComponent, Partial<Product>> = 
+    const dialogRef: MatDialogRef<ProductUpdatesDialogComponent, FormObjectDiff[]> = 
     this.dialog.getDialogById(this.ID) ||
     this.dialog.open(ProductUpdatesDialogComponent, this.DIALOG_CONFIGURATION);
 
