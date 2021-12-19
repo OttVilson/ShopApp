@@ -1,7 +1,7 @@
 <button mat-raised-button (click)="onAdd()">Add new product</button>
 <mat-form-field appearance="fill">
   <mat-label>Search</mat-label>
-  <input id="filter" matInput>
+  <input [formControl]="filter" matInput>
 </mat-form-field>
 <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="title">

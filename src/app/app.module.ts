@@ -43,6 +43,7 @@ import { ProductCardComponent } from './product-card/product-card.component';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatGridListModule,
     MatListModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule
   ],
   providers: [
     MenuService,

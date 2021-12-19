@@ -1,6 +1,6 @@
-import { Sort } from "@angular/material/sort";
+// generics
 
-const isKeyOfType = <T>(stunt: Required<T>) => (key: string | number | symbol): key is keyof T => {
+export const isKeyOfType = <T>(stunt: Required<T>) => (key: string | number | symbol): key is keyof T => {
   return key in stunt;
 }
 
@@ -14,6 +14,8 @@ function areEqualBasedOnStunt<T>(stunt: Required<T>, first: T, second: T): boole
   })
 }
 
+// Product
+
 export interface Product {
     title: string,
     price: number,
@@ -23,7 +25,7 @@ export interface Product {
     id: string
 }
 
-const productStunt: Required<Product> = {
+export const productStunt: Required<Product> = {
   title: '',
   price: 0,
   category: '',
@@ -40,44 +42,7 @@ export const areProductsEqual = (first: Product | undefined, second: Product | u
   return areEqual(first, second);
 }
 
-export type DirectedSort = Sort & { direction: 'asc' | 'desc'}
-
-export const isDirectedSort = (sort: Sort): sort is DirectedSort => {
-  return !!sort.direction;
-}
-
-export const comparator = (sortOrder: DirectedSort[]) => (first: Product, second: Product): number => {
-  const tieBreakingComparator = sortOrder.find(sort => compare(sort, first, second) !== 0);
-  
-  if (tieBreakingComparator)
-      return compare(tieBreakingComparator, first, second);
-  else return 0;
-}
-
-function compare(sort: DirectedSort, first: Product, second: Product): number {
-  const key = sort.active;
-  if (isKeyOfType(productStunt)(key)) {
-      const firstValue = first[key];
-      const secondValue = second[key];
-      return compareValues(firstValue, secondValue) * directionMultiplier(sort);
-  } else 
-      return 0;
-}
-
-function compareValues(first: string | number | undefined, second: string | number | undefined): number {
-  if (first === second)
-      return 0;
-  else if (typeof first === 'undefined')
-      return -1;
-  else if (typeof second === 'undefined')
-      return +1;
-  else
-      return first < second ? -1 : +1;
-}
-
-function directionMultiplier(sort: DirectedSort): number {
-  return sort.direction === 'asc' ? +1 : -1;
-}
+// AppUser
 
 export enum LoginProvider {
   GOOGLE = 'google.com',
@@ -106,6 +71,8 @@ export const areUsersEqual = (first: AppUser, second: AppUser): boolean => {
   const areEqual = (first: AppUser, second: AppUser) => areEqualBasedOnStunt(appUserStunt, first, second);
   return areEqual(first, second);
 }
+
+// MenuItem
 
 export interface MenuItem {
   text: string,

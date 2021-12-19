@@ -6,9 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { combineLatest, fromEvent, Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { Product } from '../model/model';
+import { Product, productStunt } from '../model/model';
 import { DatabaseService } from '../services/database.service';
 import { CustomDataSource } from '../helpers/custom-data-source';
+import { MatFormField } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-products',
@@ -19,21 +20,20 @@ export class ProductsComponent implements AfterViewInit {
 
   dataSource: CustomDataSource<Product>;
   displayedColumns: string[] = ['title', 'price', 'actions'];
+  filter: FormControl = new FormControl();
 
   constructor(
     private dbService: DatabaseService, 
     private router: Router
   ) {
-    this.dataSource = new CustomDataSource(dbService.products$);
+    this.dataSource = new CustomDataSource(dbService.products$, productStunt, ['title', 'price'], word => word);
   }
-
 
   @ViewChild(MatSort) sort!: MatSort;
 
   ngAfterViewInit() {
-    this.dataSource.addSort(this.sort);
-    let filter = document.getElementById('filter') as HTMLInputElement;
-    fromEvent(filter, 'input').subscribe(e => console.log((e.target as HTMLInputElement).value));
+    this.dataSource.setSort(this.sort);
+    this.dataSource.setFilter(this.filter);
   }
 
   onEdit(product: Product) {
