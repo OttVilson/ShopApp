@@ -1,6 +1,8 @@
 import { CollectionViewer } from "@angular/cdk/collections";
 import { DataSource } from "@angular/cdk/table";
+import { CurrencyPipe } from "@angular/common";
 import { FormControl } from "@angular/forms";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
 import { BehaviorSubject, combineLatest, merge, Observable, Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, scan, startWith, tap, withLatestFrom } from "rxjs/operators";
@@ -33,6 +35,10 @@ export class CustomDataSource<T> extends DataSource<T> {
     private _output$ = new BehaviorSubject<T[]>([]);
     private _outputSubscription: Subscription | null = null;
 
+    private _pagination$ = new BehaviorSubject<PageEvent | null>(null);
+    private _paginationSubscription: Subscription | null = null;
+    private _paginator: MatPaginator | null = null;
+
     constructor(
         data$: Observable<T[]>, 
         private stunt: Required<T>,
@@ -43,12 +49,12 @@ export class CustomDataSource<T> extends DataSource<T> {
         this._dataSubscription = data$.subscribe(array => this._input$.next(array));
     }
 
-    connect(collectionViewer: CollectionViewer): Observable<readonly T[]> {
+    connect(): Observable<readonly T[]> {
         this.constructOutput();
         return this._output$.asObservable();
     }
 
-    disconnect(collectionViewer: CollectionViewer): void {
+    disconnect(): void {
         this._input$.complete();
         this._dataSubscription.unsubscribe();
 
@@ -60,14 +66,9 @@ export class CustomDataSource<T> extends DataSource<T> {
 
         this._sort$.complete();
         this._sortSubscription?.unsubscribe();
-    }
 
-    setSort(sort: MatSort) {
-        this._sortSubscription?.unsubscribe();
-    
-        this._sortSubscription = sort.sortChange.pipe(
-            scan((acc, cur) => this.accumulateSort(acc, cur), [] as DirectedSort<T>[])
-        ).subscribe(directedSortArray => this._sort$.next(directedSortArray))
+        this._pagination$.complete();
+        this._paginationSubscription?.unsubscribe();
     }
 
     setFilter(filter: FormControl) {
@@ -79,20 +80,48 @@ export class CustomDataSource<T> extends DataSource<T> {
         ).subscribe(filter => this._filter$.next(filter))
     }
 
+    setSort(sort: MatSort) {
+        this._sortSubscription?.unsubscribe();
+    
+        this._sortSubscription = sort.sortChange.pipe(
+            scan((acc, cur) => this.accumulateSort(acc, cur), [] as DirectedSort<T>[])
+        ).subscribe(directedSortArray => this._sort$.next(directedSortArray))
+    }
+
+    setPaginator(paginator: MatPaginator) {
+        this._paginationSubscription?.unsubscribe();
+
+        this._paginator = paginator;
+        this.initializeStream(paginator);
+        this._paginationSubscription = paginator.page.subscribe(pageEvent => this._pagination$.next(pageEvent));
+    }
+
     private constructOutput(): void {
-        const emitFilteredAndSortedDataOnNewDataEvent$ 
-            = this.initializedEmitFilteredAndSortedDataOnNewDataEvent(this._input$, this._filter$, this._sort$);
-        const emitSortedDataOnFilterEvent$ = 
-            this.initializedEmitSortedDataOnFilterEvent(this._input$, this._filter$, this._sort$);
-        const emitFilteredDataOnSortEvent$ = 
-            this.initializedEmitFilteredDataOnSortEvent(this._input$, this._filter$, this._sort$);
+        const sortedAndFilteredData$ = 
+            this.initializedSortedAndFilteredData(this._input$, this._filter$, this._sort$); 
         
-        this._outputSubscription = 
-            merge(
-                emitFilteredAndSortedDataOnNewDataEvent$.pipe(tap(() => console.log('new data'))), 
-                emitSortedDataOnFilterEvent$.pipe(tap(() => console.log('filter event'))), 
-                emitFilteredDataOnSortEvent$.pipe(tap(() => console.log('sort event')))
-            ).subscribe(data => this._output$.next(data));
+        this._outputSubscription = combineLatest([sortedAndFilteredData$, this._pagination$]).pipe(
+            map(([sortedAndFilteredData, pagination]) => this.paginateData(sortedAndFilteredData, pagination))
+        ).subscribe(data => this._output$.next(data));
+    }
+
+    private initializedSortedAndFilteredData(
+        data$: Observable<T[]>, 
+        filter$: Observable<string>, 
+        sort$: Observable<DirectedSort<T>[]>
+    ): Observable<T[]> {
+        const emitFilteredAndSortedDataOnNewDataEvent$ 
+            = this.initializedEmitFilteredAndSortedDataOnNewDataEvent(data$, filter$, sort$);
+        const emitSortedDataOnFilterEvent$ = 
+            this.initializedEmitSortedDataOnFilterEvent(data$, filter$, sort$);
+        const emitFilteredDataOnSortEvent$ = 
+            this.initializedEmitFilteredDataOnSortEvent(data$, filter$, sort$);
+        
+        return  merge(
+                    emitFilteredAndSortedDataOnNewDataEvent$, 
+                    emitSortedDataOnFilterEvent$, 
+                    emitFilteredDataOnSortEvent$
+                );
     }
 
     private initializedEmitFilteredAndSortedDataOnNewDataEvent(
@@ -172,5 +201,38 @@ export class CustomDataSource<T> extends DataSource<T> {
             result.unshift(currentSort);
 
         return result;
+    }
+
+    private paginateData(data: T[], pagination: PageEvent | null): T[] {
+        if (!pagination) return data;
+        else if(this.isFullPage(data, pagination)) {
+            const start = pagination.pageIndex*pagination.pageSize;
+            const end = start + pagination.pageSize;
+            return data.slice(start, end);
+        } else {
+            const pageIndex = !data.length ? 0 : Math.ceil(data.length / pagination.pageSize) - 1;
+            this.updatePaginatorIfNeeded(pageIndex, data.length);
+            return data.slice(pageIndex * pagination.pageSize); 
+        }
+    }
+
+    private isFullPage(data: T[], pagination: PageEvent): boolean {
+        return (pagination.pageIndex + 1)*pagination.pageSize <= data.length;
+    }
+
+    private updatePaginatorIfNeeded(pageIndex: number, length: number): void {
+        if (this._paginator) {
+            const paginator = this._paginator;
+            if (paginator.pageIndex !== pageIndex) paginator.pageIndex = pageIndex
+            if (paginator.length !== length) paginator.length = length
+         }
+    }
+
+    private initializeStream(paginator: MatPaginator) {
+        this._pagination$.next({ 
+            pageIndex: paginator.pageIndex, 
+            pageSize: paginator.pageSize, 
+            length: this._input$.getValue().length
+        });
     }
 }
