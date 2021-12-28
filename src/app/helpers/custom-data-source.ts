@@ -5,7 +5,7 @@ import { FormControl } from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
 import { BehaviorSubject, combineLatest, merge, Observable, Subscription } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, scan, startWith, tap, withLatestFrom } from "rxjs/operators";
+import { debounceTime, delay, distinctUntilChanged, map, scan, startWith, tap, withLatestFrom } from "rxjs/operators";
 import { isKeyOfType } from "../model/model";
 import { comparator, DirectedSort, isDirectedSort } from "./sort.helpers";
 
@@ -20,9 +20,7 @@ const columnsToFilterBasedOnStunt = <T>(stunt: Required<T>): (keyof T)[] => {
     return result;
 }
 
-
 export class CustomDataSource<T> extends DataSource<T> {
-
     private _dataSubscription: Subscription;
     private _input$ = new BehaviorSubject<T[]>([]);
     
@@ -92,8 +90,14 @@ export class CustomDataSource<T> extends DataSource<T> {
         this._paginationSubscription?.unsubscribe();
 
         this._paginator = paginator;
-        this.initializeStream(paginator);
-        this._paginationSubscription = paginator.page.subscribe(pageEvent => this._pagination$.next(pageEvent));
+        this._paginator.length = 100;
+        paginator.page.subscribe(console.log);
+
+        // this.initializeStream(paginator);
+        // this._paginationSubscription = paginator.page.subscribe(pageEvent => {
+        //     this._pagination$.next(pageEvent);
+        //     console.log(pageEvent);
+        // });
     }
 
     private constructOutput(): void {
@@ -106,9 +110,9 @@ export class CustomDataSource<T> extends DataSource<T> {
     }
 
     private initializedSortedAndFilteredData(
-        data$: Observable<T[]>, 
-        filter$: Observable<string>, 
-        sort$: Observable<DirectedSort<T>[]>
+        data$: BehaviorSubject<T[]>, 
+        filter$: BehaviorSubject<string>, 
+        sort$: BehaviorSubject<DirectedSort<T>[]>
     ): Observable<T[]> {
         const emitFilteredAndSortedDataOnNewDataEvent$ 
             = this.initializedEmitFilteredAndSortedDataOnNewDataEvent(data$, filter$, sort$);
@@ -125,20 +129,21 @@ export class CustomDataSource<T> extends DataSource<T> {
     }
 
     private initializedEmitFilteredAndSortedDataOnNewDataEvent(
-        data$: Observable<T[]>,
-        filter$: Observable<string>,
-        sort$: Observable<DirectedSort<T>[]>
+        data$: BehaviorSubject<T[]>,
+        filter$: BehaviorSubject<string>,
+        sort$: BehaviorSubject<DirectedSort<T>[]>
     ): Observable<T[]> {
         return  data$.pipe(
+                    delay(0),
                     withLatestFrom(filter$, sort$),
                     map(([data, filter, sortArray]) => this.sort(sortArray, this.filter(filter, data)))
                 );
     }
 
     private initializedEmitSortedDataOnFilterEvent(
-        data$: Observable<T[]>,
-        filter$: Observable<string>,
-        sort$: Observable<DirectedSort<T>[]> 
+        data$: BehaviorSubject<T[]>,
+        filter$: BehaviorSubject<string>,
+        sort$: BehaviorSubject<DirectedSort<T>[]> 
     ): Observable<T[]> {        
         const emitFullSortedDataOnChange$ = this.initializedEmitFullSortedDataOnChange(data$, sort$);
         return  filter$.pipe(
@@ -148,8 +153,8 @@ export class CustomDataSource<T> extends DataSource<T> {
     }
         
     private initializedEmitFullSortedDataOnChange(
-        data$: Observable<T[]>, 
-        sort$: Observable<DirectedSort<T>[]>
+        data$: BehaviorSubject<T[]>, 
+        sort$: BehaviorSubject<DirectedSort<T>[]>
     ): Observable<T[]> {
         return  combineLatest([sort$, data$]).pipe(
                     map(([sortArray, data]) => this.sort(sortArray, data))
@@ -162,9 +167,9 @@ export class CustomDataSource<T> extends DataSource<T> {
     }
     
     private initializedEmitFilteredDataOnSortEvent(        
-        data$: Observable<T[]>,
-        filter$: Observable<string>,
-        sort$: Observable<DirectedSort<T>[]> 
+        data$: BehaviorSubject<T[]>,
+        filter$: BehaviorSubject<string>,
+        sort$: BehaviorSubject<DirectedSort<T>[]> 
     ): Observable<T[]> {        
         const emitFilteredDataOnChange$ = this.initializedEmitFilteredDataOnChange(data$, filter$);
         return  sort$.pipe(
@@ -174,8 +179,8 @@ export class CustomDataSource<T> extends DataSource<T> {
     }
 
     private initializedEmitFilteredDataOnChange(
-        data$: Observable<T[]>,
-        filter$: Observable<string>
+        data$: BehaviorSubject<T[]>,
+        filter$: BehaviorSubject<string>
     ): Observable<T[]> {
         return  combineLatest([filter$, data$]).pipe(
                     map(([filter, data]) => this.filter(filter, data))
