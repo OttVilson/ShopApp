@@ -15,6 +15,4 @@ export class StoreComponent {
   constructor(dbService: DatabaseService) {
     this.products$ = dbService.products$;
   }
-
-
 }

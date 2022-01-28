@@ -1,5 +1,7 @@
 // generics
 
+import { CompareFunction } from "ngx-data-source";
+
 export const isKeyOfType = <T>(stunt: Required<T>) => (key: string | number | symbol): key is keyof T => {
   return key in stunt;
 }
@@ -12,6 +14,13 @@ function areEqualBasedOnStunt<T>(stunt: Required<T>, first: T, second: T): boole
       return first[key] === second[key]
     else return true;
   })
+}
+
+export interface TableColumn<T> {
+  columnDef: string, 
+  header: string, 
+  cell: (product: T) => string,
+  compareFunction: CompareFunction<T>
 }
 
 // Product

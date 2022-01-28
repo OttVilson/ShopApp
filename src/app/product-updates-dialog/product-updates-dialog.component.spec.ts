@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { ProductUpdatesDialogComponent } from './product-updates-dialog.component';
 
 
-fdescribe('ProductUpdatesDialogComponent', () => {
+describe('ProductUpdatesDialogComponent', () => {
   let component: ProductUpdatesDialogComponent;
   let fixture: ComponentFixture<ProductUpdatesDialogComponent>;
 

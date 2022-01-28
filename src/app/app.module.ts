@@ -28,6 +28,9 @@ import { ProductUpdatesDialogComponent } from './product-updates-dialog/product-
 import { ProductCardComponent } from './product-card/product-card.component';
 import { MaterialComponentsModule } from './material-components.module';
 import { CurrencyPipe } from '@angular/common';
+import { NgxDataSourceModule } from 'ngx-data-source';
+import { NgxDataSourceMaterialPluginsModule } from 'ngx-data-source-material-plugins';
+
 
 @NgModule({
   declarations: [
@@ -54,7 +57,9 @@ import { CurrencyPipe } from '@angular/common';
     AngularFireAuthModule,
     AngularFirestoreModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDataSourceModule,
+    NgxDataSourceMaterialPluginsModule
   ],
   providers: [
     MenuService,

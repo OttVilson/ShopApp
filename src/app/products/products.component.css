@@ -1,4 +1,26 @@
 table {
+    width: 100%;
+}
+
+.wrapper {
     width: 80%;
     margin: auto;
+}
+
+.mat-form-field {
+    width: 70%;
+}
+
+.toolbar {
+    width: 100%;
+}
+
+button {
+    float: right;
+    margin-top: 5px;
+    height: 50px !important;
+}
+
+.spacer {
+    flex: 1 1 auto;
 }
