@@ -1,3 +1,29 @@
+// generics
+
+import { CompareFunction } from "ngx-data-source";
+
+export const isKeyOfType = <T>(stunt: Required<T>) => (key: string | number | symbol): key is keyof T => {
+  return key in stunt;
+}
+
+function areEqualBasedOnStunt<T>(stunt: Required<T>, first: T, second: T): boolean {
+  const isKeyOfT = isKeyOfType(stunt);
+
+  return Object.keys(stunt).every(key => {
+    if (isKeyOfT(key))
+      return first[key] === second[key]
+    else return true;
+  })
+}
+
+export interface TableColumn<T> {
+  columnDef: string, 
+  header: string, 
+  cell: (product: T) => string,
+  compareFunction: CompareFunction<T>
+}
+
+// Product
 
 export interface Product {
     title: string,
@@ -8,16 +34,28 @@ export interface Product {
     id: string
 }
 
-export const areProductsEqual = (first: Product | undefined, second: Product | undefined) => {
-  if (first === undefined || second === undefined)
-    return first === second;
+export const productStunt: Required<Product> = {
+  title: '',
+  price: 0,
+  category: '',
+  imageURL: '',
+  imageCredit: '',
+  id: ''
+}
 
-  return first.title    === second.title &&
-         first.price    === second.price &&
-         first.category === second.category &&
-         first.imageURL === second.imageURL &&
-         first.imageCredit === second.imageCredit &&
-         first.id       === second.id;
+export const areProductsEqual = (first: Product | undefined, second: Product | undefined) => {
+  if (first === second) return true;
+  if (first === undefined || second === undefined) return false;
+
+  const areEqual = (first: Product, second: Product) => areEqualBasedOnStunt(productStunt, first, second);
+  return areEqual(first, second);
+}
+
+// AppUser
+
+export enum LoginProvider {
+  GOOGLE = 'google.com',
+  GITHUB = 'github.com'
 }
 
 export interface AppUser {
@@ -28,20 +66,22 @@ export interface AppUser {
   isAdmin?: boolean,
   loginProvider: LoginProvider
 }
-  
-export const areUsersEqual = (first: AppUser, second: AppUser): boolean => {
-  return first.uuid          === second.uuid &&
-         first.name          === second.name &&
-         first.photoURL      === second.photoURL &&
-         first.icon          === second.icon &&
-         first.isAdmin       === second.isAdmin &&
-         first.loginProvider === second.loginProvider;
+
+const appUserStunt: Required<AppUser> = {
+  uuid: '',
+  name: '',
+  photoURL: '',
+  icon: '',
+  isAdmin: false,
+  loginProvider: LoginProvider.GOOGLE
 }
 
-export enum LoginProvider {
-  GOOGLE = 'google.com',
-  GITHUB = 'github.com'
+export const areUsersEqual = (first: AppUser, second: AppUser): boolean => {
+  const areEqual = (first: AppUser, second: AppUser) => areEqualBasedOnStunt(appUserStunt, first, second);
+  return areEqual(first, second);
 }
+
+// MenuItem
 
 export interface MenuItem {
   text: string,

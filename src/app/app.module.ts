@@ -3,16 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { AppRoutingModule } from './routing/app-routing.module';
 import { NavComponent } from './nav/nav.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { ShortcutNavDirective } from './directives/shortcut-nav.directive';
 import { MenuService } from './services/menu.service';
 
@@ -30,18 +24,13 @@ import { DatabaseService } from './services/database.service';
 import { ProductEditComponent } from './product-edit/product-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SpinnerService } from './services/spinner.service';
-import { MatDialogModule } from '@angular/material/dialog';
 import { ProductUpdatesDialogComponent } from './product-updates-dialog/product-updates-dialog.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { ProductCardComponent } from './product-card/product-card.component';
-import { MatListModule } from '@angular/material/list';
-import { MatTableModule } from '@angular/material/table';
+import { MaterialComponentsModule } from './material-components.module';
+import { CurrencyPipe } from '@angular/common';
+import { NgxDataSourceModule } from 'ngx-data-source';
+import { NgxDataSourceMaterialPluginsModule } from 'ngx-data-source-material-plugins';
+
 
 @NgModule({
   declarations: [
@@ -62,33 +51,22 @@ import { MatTableModule } from '@angular/material/table';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatIconModule,
     AppRoutingModule,
-    MatToolbarModule,
+    MaterialComponentsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
     FormsModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule,
-    MatDialogModule,
-    MatCheckboxModule,
-    MatSnackBarModule,
-    MatTooltipModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatGridListModule,
-    MatListModule,
-    MatTableModule
+    NgxDataSourceModule,
+    NgxDataSourceMaterialPluginsModule
   ],
   providers: [
     MenuService,
     AuthService,
     DatabaseService,
-    SpinnerService
+    SpinnerService,
+    CurrencyPipe
   ],
   bootstrap: [AppComponent]
 })

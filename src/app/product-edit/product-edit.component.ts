@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { asapScheduler, EMPTY, Observable, of, Subscription } from 'rxjs';
-import { filter, map, pairwise, startWith, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { FormObjectDiff as FormObjectDiff, leftDiffBetweenFormAndObject } from '../helpers/form.helpers';
 import { Product } from '../model/model';
 import { ProductUpdatesDialogComponent } from '../product-updates-dialog/product-updates-dialog.component';
@@ -101,7 +101,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   private openDialogAndReturnItsResult(diffArray: FormObjectDiff[]): Observable<FormObjectDiff[]> {
-    const dialogRef: MatDialogRef<ProductUpdatesDialogComponent, Partial<Product>> = 
+    const dialogRef: MatDialogRef<ProductUpdatesDialogComponent, FormObjectDiff[]> = 
     this.dialog.getDialogById(this.ID) ||
     this.dialog.open(ProductUpdatesDialogComponent, this.DIALOG_CONFIGURATION);
 

@@ -47,9 +47,7 @@ export class SpinnerService {
         return of(false);
       }),
       map(res => res ? +1 : -1),
-      tap(res => console.log('spinner res:', res)),
       scan((acc, value) => acc + value >= 0 ? acc + value : 0, 0),
-      tap(scan => console.log('spinner scan', scan))
     )
     .subscribe({
       next: res => this.regulateSpinner(res, this.overlayRef),

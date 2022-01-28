@@ -1,17 +1,17 @@
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { FormControl } from "@angular/forms";
 import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
 import { FormObjectDiff } from "../helpers/form.helpers";
 import { ProductUpdatesDialogComponent } from "./product-updates-dialog.component";
 import { TestScheduler } from 'rxjs/testing';
-import { auditTime, delayWhen, filter, map, startWith, tap, throttleTime } from "rxjs/operators";
-import { asyncScheduler, EMPTY, from, Observable, ReplaySubject, timer } from "rxjs";
+import { filter, map, throttleTime } from "rxjs/operators";
+import { asyncScheduler, Observable } from "rxjs";
 
 class MockSnackBar {
     open(message: string, action?: string | undefined, config?: MatSnackBarConfig<any> | undefined) {}
 }
 
-fdescribe('Product updates dialog unit tests', () => {
+describe('Product updates dialog unit tests', () => {
 describe('common flow with up to one set of updates', () => {
     let component: ProductUpdatesDialogComponent;
     let diffs: FormObjectDiff[];
